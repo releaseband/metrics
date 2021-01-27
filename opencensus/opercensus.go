@@ -28,7 +28,7 @@ var (
 
 type OpencensusMetrics struct{}
 
-func NewOpencensusMetrics(errorHandler func(err error)) (OpencensusMetrics, error) {
+func MakeOpencensusMetrics(errorHandler func(err error)) (OpencensusMetrics, error) {
 	m := OpencensusMetrics{}
 
 	if err := view.Register(views...); err != nil {
