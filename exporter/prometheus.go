@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"contrib.go.opencensus.io/exporter/prometheus"
 )
@@ -29,11 +30,20 @@ func NewPrometheusConfigs(
 	}
 }
 
+func makePrometheusServer(port int, handler http.Handler) *http.Server {
+	return &http.Server{
+		Addr:         ":" + strconv.Itoa(port),
+		Handler:      handler,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
+	}
+}
+
 func runServer(exporter *prometheus.Exporter, config PrometheusConfigs) {
 	mux := http.NewServeMux()
 	mux.Handle(config.metricsPath, exporter)
 
-	if err := http.ListenAndServe(":"+strconv.Itoa(config.port), mux); err != nil {
+	if err := makePrometheusServer(config.port, mux).ListenAndServe(); err != nil {
 		config.errHandler(err)
 	}
 }
@@ -45,5 +55,6 @@ func RunPrometheusExporter(config PrometheusConfigs) error {
 	}
 
 	go runServer(e, config)
+
 	return nil
 }
