@@ -33,15 +33,12 @@ func worker(i int64) {
 
 	fmt.Println("worker " + workerName + " started")
 
-	mutators := []tag.Mutator{
-		measure.NewMutator(entityKey, "worker"),
-		measure.NewMutator(workerNameKey, workerName),
-	}
-
-	ctxFactory := measure.ContextFactory(mutators...)
-
 	for {
-		ctx, err := ctxFactory(context.Background())
+		ctx, err := tag.New(context.Background(),
+			tag.Insert(entityKey, "worker"),
+			tag.Insert(workerNameKey, workerName),
+		)
+
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -58,11 +55,13 @@ func initViews() error {
 	latencyTagKeys := []tag.Key{entityKey, workerNameKey}
 	counterTagKeys := []tag.Key{entityKey, workerNameKey}
 
-	latency = measure.NewLatencyMeasure("latency", "The latency measure in milliseconds", latencyTagKeys)
-	counter = measure.NewCounterMeasure("counter", "The counter measure", counterTagKeys)
+	latency = measure.NewLatencyMeasure("latency", "The latency measure in milliseconds")
+	counter = measure.NewCounterMeasure("counter", "The counter measure")
 
-	latencyView := views.MakeLatencyView("worker #1", "latency by worker #1", latency)
-	counterView := views.MakeCounterView("worker #2", "how many times the worker was called", counter)
+	latencyView := views.MakeLatencyView("latency_view",
+		"latency view description", latency, latencyTagKeys)
+	counterView := views.MakeCounterView("counter_view",
+		"counter view description", counter, counterTagKeys)
 
 	return views.RegisterViews(latencyView, counterView)
 }
