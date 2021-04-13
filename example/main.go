@@ -59,9 +59,9 @@ func initViews() error {
 	counter = measure.NewCounterMeasure("counter", "The counter measure")
 
 	latencyView := views.MakeLatencyView("latency_view",
-		"latency view description", latency, latencyTagKeys)
+		"latency view description", latency.Measure(), latencyTagKeys)
 	counterView := views.MakeCounterView("counter_view",
-		"counter view description", counter, counterTagKeys)
+		"counter view description", counter.Measure(), counterTagKeys)
 
 	return views.RegisterViews(latencyView, counterView)
 }
