@@ -3,14 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/releaseband/metrics"
+	"github.com/releaseband/metrics/v2"
+	"github.com/releaseband/metrics/v2/exporter"
 	"log"
 	"strconv"
 	"time"
 
 	"contrib.go.opencensus.io/exporter/prometheus"
-	"github.com/releaseband/metrics/exporter"
-
 	"go.opencensus.io/tag"
 )
 
