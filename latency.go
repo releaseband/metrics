@@ -23,7 +23,7 @@ func recordLatency(ctx context.Context, m *stats.Float64Measure, start time.Time
 func Start(ctx context.Context, m *stats.Float64Measure, mutators ...tag.Mutator) (context.Context, func(ctx context.Context), error) {
 	newCtx, err := tag.New(ctx, mutators...)
 	if err != nil {
-		return nil, nil, err
+		return ctx, func(ctx context.Context) {}, err
 	}
 
 	start := time.Now()
