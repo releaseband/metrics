@@ -3,15 +3,16 @@ package metrics
 import "os"
 
 const (
+	defaultPrefix      = "RB"
 	prefixEnvKey       = "REDIS_METRIC_PREFIX"
 	redisHistogramName = "redis_duration_seconds"
 )
 
-func GetRedisHistogramName() string {
+func getPrefix() string {
 	prefix := os.Getenv(prefixEnvKey)
 	if prefix == "" {
-		return redisHistogramName
+		return defaultPrefix
 	}
 
-	return prefix + "." + redisHistogramName
+	return prefix
 }
