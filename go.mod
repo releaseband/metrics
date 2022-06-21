@@ -1,4 +1,4 @@
-module github.com/releaseband/metrics/v3
+module github.com/releaseband/metrics/v4
 
 go 1.15
 
